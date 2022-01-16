@@ -1,0 +1,1 @@
+export {ReadTrollPolicyHandler} from './policies.handler';
