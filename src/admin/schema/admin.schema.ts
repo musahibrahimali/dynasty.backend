@@ -11,7 +11,7 @@ export class Admin {
     email: string;
 
     @IsString()
-    @Prop({required: true, minlength: 8, maxlength: 15})
+    @Prop({required: true, minlength: 8 })
     password: string;
 
     @IsString()
@@ -27,7 +27,7 @@ export class Admin {
     displayName: string;
 
     @IsPhoneNumber()
-    @Prop({required: false, minlength: 10, maxlength: 15})
+    @Prop({required: false })
     phone: string;
 
     @IsString()
