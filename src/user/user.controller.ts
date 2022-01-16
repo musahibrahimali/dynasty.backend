@@ -112,8 +112,8 @@ export class UserController {
     @ApiCreatedResponse({type: CreateUserDto})
     @UseGuards(JwtAuthGuard)
     @Patch('update-profile:/id')
-    async updateClientProfile(@Param("id") id: string, @Body() updateCLientDto: CreateUserDto): Promise<IUser>{
-        return this.userService.updateProfile(id, updateCLientDto);
+    async updateClientProfile(@Param("id") id: string, @Body() updateUserDto: CreateUserDto): Promise<IUser>{
+        return this.userService.updateProfile(id, updateUserDto);
     }
 
     // get the user profile information
