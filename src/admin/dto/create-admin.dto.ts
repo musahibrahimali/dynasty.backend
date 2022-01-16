@@ -1,4 +1,4 @@
-export class CreateUserDto {
+export class CreateAdminDto {
     email: string;
     password: string;
     firstName: string;
@@ -6,6 +6,7 @@ export class CreateUserDto {
     displayName?: string;
     phone: string;
     profile?: string;
+    salt?: string;
     role?: string[];
     isAdmin?: boolean;
 }
