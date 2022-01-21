@@ -9,7 +9,6 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { UsersModule } from '../users/users.module';
 import { AdminsModule } from 'src/admin/admins.module';
 import * as Joi from 'joi';
-
 @Module({
   imports: [
     // other modules
@@ -19,7 +18,7 @@ import * as Joi from 'joi';
     // graphql module
     GraphQLModule.forRoot({
       installSubscriptionHandlers: true,
-      autoSchemaFile: 'true',
+      autoSchemaFile: true, // join(process.cwd(), 'src/schema.gql') "true" to generate types on the fly
       sortSchema: true,
       playground: true,
       debug: true,
