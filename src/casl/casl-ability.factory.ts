@@ -7,8 +7,8 @@ import {
     ExtractSubjectType, 
     InferSubjects 
 } from '@casl/ability';
-import { Admin } from 'src/admin/schema/admin.schema';
-import { User } from 'src/user/schema/user.schema';
+import { User } from 'src/users/schema/user.schema';
+import { Admin } from "src/admin/schema/admin.schema";
 
 type Subjects = InferSubjects<typeof User | typeof Admin> | 'all';
 

@@ -4,13 +4,35 @@ import {MongooseModule} from '@nestjs/mongoose';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import configuration from 'src/config/configuration';
-import { RolesGuard } from 'src/authorization/authorizations';
+import { RolesGuard } from 'src/auth/auth';
+import { GraphQLModule } from '@nestjs/graphql';
+import { UsersModule } from '../users/users.module';
+import { AdminsModule } from 'src/admin/admins.module';
 import * as Joi from 'joi';
-import { UserModule } from '../user/user.module';
-import { AdminModule } from '../admin/admin.module';
 
 @Module({
   imports: [
+    // other modules
+    UsersModule,
+    AdminsModule,
+
+    // graphql module
+    GraphQLModule.forRoot({
+      installSubscriptionHandlers: true,
+      autoSchemaFile: 'true',
+      sortSchema: true,
+      playground: true,
+      debug: true,
+      cors: {
+        origin: true,
+        credentials: true,
+      },
+      // add context object for request and response
+      context: ({ req, res }) => {
+        return {req, res};
+      },
+    }),
+
     // configuration module
     ConfigModule.forRoot({
       isGlobal: true,
@@ -31,10 +53,10 @@ import { AdminModule } from '../admin/admin.module';
       },
     }),
     // connect to mongodb database
-    MongooseModule.forRoot("mongodb://localhost/dynastyurbanstyle"), 
-    // other modules
-    AdminModule,
-    UserModule,
+    MongooseModule.forRoot("mongodb://localhost/dynastyurbanstyle",{
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }),
   ],
   controllers: [AppController],
   providers: [

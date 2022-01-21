@@ -23,7 +23,12 @@ async function bootstrap() {
 
   // middlewares
   app.use(cookieParser());
-  app.use(helmet());
+  app.use(
+    helmet({ 
+      contentSecurityPolicy: false, 
+      crossOriginEmbedderPolicy: false 
+    })
+  );
 
   app.useGlobalPipes(new ValidationPipe());
   const config = new DocumentBuilder()
@@ -40,6 +45,7 @@ async function bootstrap() {
   await app.listen(port).then(() => {
     console.log(`Server running on port http://localhost:${port}`);
     console.log(`Swagger running on port http://localhost:${port}/api`);
+    console.log(`GraphQl running on port http://localhost:${port}/graphql`);
     console.log("Press CTRL-C to stop server");
   }).catch((err) => {
     console.log("There was an error starting server. ", err);
