@@ -16,7 +16,7 @@ export class ProductsService {
     return `This action returns a #${id} product`;
   }
 
-  update(id: number, updateProductInput: UpdateProductInput) {
+  update(id: string, updateProductInput: UpdateProductInput) {
     return `This action updates a #${id} product`;
   }
 
