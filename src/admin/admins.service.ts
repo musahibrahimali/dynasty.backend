@@ -11,6 +11,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { generateSalt } from 'src/common/common';
 import { comparePassword, hashPassword } from 'src/common/functions/common.function';
 import { LoginAdminInput } from './dto/login-admin.input';
+import { FileUpload } from 'graphql-upload';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class AdminsService {
@@ -99,13 +102,43 @@ export class AdminsService {
     return admin;
   }
 
-  // update admin avatar
-  async updateAvatar(id: string, avatar: string): Promise<GAdmin> {
-    // find and update user
-    const admin = await this.adminsModel.findOne({ _id: id });
-    // set the avatar to the new avatar string
-    admin.avatar = avatar;
-    return admin;
+  // update user avatar
+  async updateAvatar(id: string, avatar: FileUpload): Promise<GAdmin> {
+    try{
+      const { createReadStream, filename } = avatar;
+      const stream = createReadStream();
+      const chunks = [];
+      await new Promise<Buffer>((resolve, reject) => {
+        let buffer: Buffer;
+        stream.on('data', function (chunk) {
+          chunks.push(chunk);
+        });
+        stream.on('end', function () {
+          buffer = Buffer.concat(chunks);
+          resolve(buffer);
+        });
+        stream.on('error', reject);
+      });
+      const buffer = Buffer.concat(chunks);
+      const uploadsDir = await this.configService.get('UPLOADS_DIR');
+      const folderPath = path.join(__dirname, `${uploadsDir}/images/avatars`);
+      if(!fs.existsSync(folderPath)){
+        fs.mkdirSync(folderPath, {recursive: true});
+      }
+      // write the file to the folder
+      fs.writeFile(`${folderPath}/${filename}`, buffer, (error:any) => {
+        if(error){
+          return error;
+        }
+      });
+      // find and update the admin avatar string
+      const admin = await this.adminsModel.findOne({ _id: id });
+      // set the avatar to the new avatar string
+      admin.avatar = filename;
+      return admin;
+    }catch(error){
+      return error;
+    }
   }
 
   // logout admin

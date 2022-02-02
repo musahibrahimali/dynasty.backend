@@ -11,6 +11,9 @@ import { LoginUserInput } from './dto/login-user.input';
 import { InjectModel } from '@nestjs/mongoose';
 import {Ctx} from 'src/types/types';
 import { ConfigService } from '@nestjs/config';
+import { FileUpload } from 'graphql-upload';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class UsersService {
@@ -112,12 +115,42 @@ export class UsersService {
   }
 
   // update user avatar
-  async updateAvatar(id: string, avatar: string): Promise<GUser> {
-    // find and update user
-    const user = await this.usersModel.findOne({ _id: id });
-    // set the avatar to the new avatar string
-    user.avatar = avatar;
-    return user;
+  async updateAvatar(id: string, avatar: FileUpload): Promise<GUser> {
+    try{
+      const { createReadStream, filename } = avatar;
+      const stream = createReadStream();
+      const chunks = [];
+      await new Promise<Buffer>((resolve, reject) => {
+        let buffer: Buffer;
+        stream.on('data', function (chunk) {
+          chunks.push(chunk);
+        });
+        stream.on('end', function () {
+          buffer = Buffer.concat(chunks);
+          resolve(buffer);
+        });
+        stream.on('error', reject);
+      });
+      const buffer = Buffer.concat(chunks);
+      const uploadsDir = await this.configService.get('UPLOADS_DIR');
+      const folderPath = path.join(__dirname, `${uploadsDir}/images/avatars`);
+      if(!fs.existsSync(folderPath)){
+        fs.mkdirSync(folderPath, {recursive: true});
+      }
+      // write the file to the folder
+      fs.writeFile(`${folderPath}/${filename}`, buffer, (error:any) => {
+        if(error){
+          return error;
+        }
+      });
+      // find and update the user avatar string
+      const user = await this.usersModel.findOne({ _id: id });
+      // set the avatar to the new avatar string
+      user.avatar = filename;
+      return user;
+    }catch(error){
+      return error;
+    }
   }
 
   // logout user

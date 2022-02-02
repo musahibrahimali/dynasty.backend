@@ -7,8 +7,9 @@ import {Ctx} from 'src/types/types';
 import { LoginAdminInput } from './dto/login-admin.input';
 import { PubSub } from 'graphql-subscriptions';
 import { CurrentUser } from 'src/common/common';
+import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
+import { FileUpload, GraphQLUpload } from 'graphql-upload';
 import { UseGuards } from '@nestjs/common';
-import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 
 // subscription handler
 const pubSub = new PubSub();
@@ -35,7 +36,6 @@ export class AdminsResolver {
 
   // find a user
   @Query(() => GAdmin, { name: 'admin' })
-  @UseGuards(GqlAuthGuard)
   async findOneAdmin(@CurrentUser() admin: GAdmin): Promise<GAdmin> {
     return this.adminsService.findOne(admin._id);
   }
@@ -50,9 +50,10 @@ export class AdminsResolver {
 
   // update user avatar
   @Mutation(() => GAdmin)
-  async updateAdminAvatar(@Args('id', { type: () => ID }) id: string, @Args('avatar') avatar: string): Promise<GAdmin> {
-    const admin = await this.adminsService.updateAvatar(id, avatar);
-    pubSub.publish('adminUpdated', { adminUpdated: admin });
+  @UseGuards(GqlAuthGuard)
+  async updateAvatar(@Args({name: 'avatar', type: () => GraphQLUpload }) avatar: FileUpload, @CurrentUser() adm: GAdmin): Promise<GAdmin> {
+    const admin = await this.adminsService.updateAvatar(adm._id, avatar);
+    pubSub.publish('userUpdated', { userUpdated: admin });
     return admin;
   }
 

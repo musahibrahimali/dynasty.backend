@@ -1,3 +1,5 @@
+export { RolesGuard } from './guards/roles.guard';
+export { PoliciesGuard } from './guards/policies.guard';
 export {
     CHECK_POLICIES_KEY,
     CheckPolicies,Roles,
@@ -7,11 +9,3 @@ export {
 export {
     ReadTrollPolicyHandler,
 } from './handlers/handlers';
-
-export {
-    JwtAuthGuard,
-    RolesGuard,
-    PoliciesGuard,
-    GoogleAuthGuard,
-    FacebookAuthGuard,
-} from './guards/guards';

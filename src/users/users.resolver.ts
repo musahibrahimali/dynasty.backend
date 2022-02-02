@@ -8,6 +8,7 @@ import { LoginUserInput } from './dto/login-user.input';
 import { PubSub } from 'graphql-subscriptions';
 import { UseGuards } from '@nestjs/common';
 import { CurrentUser } from 'src/common/common';
+import { FileUpload, GraphQLUpload } from 'graphql-upload';
 import { GqlAuthGuard } from 'src/auth/guards/guards';
 
 // subscription handler
@@ -37,26 +38,30 @@ export class UsersResolver {
   @Query(() => GUser, { name: 'user' })
   @UseGuards(GqlAuthGuard)
   async findOne(@CurrentUser() user: GUser): Promise<GUser> {
-    return this.usersService.findOne(user._id);
+    return await this.usersService.findOne(user._id);
   }
+
   // update user
   @Mutation(() => GUser)
-  async updateUser(@Args('id', { type: () => ID }) id: string, @Args('updateUserInput') updateUserInput: UpdateUserInput): Promise<GUser> {
-    const user = await this.usersService.update(id, updateUserInput);
+  @UseGuards(GqlAuthGuard)
+  async updateUser(@CurrentUser() usr: GUser, @Args('updateUserInput') updateUserInput: UpdateUserInput): Promise<GUser> {
+    const user = await this.usersService.update(usr._id, updateUserInput);
     pubSub.publish('userUpdated', { userUpdated: user });
     return user;
   }
 
   // update user avatar
   @Mutation(() => GUser)
-  async updateUserAvatar(@Args('id', { type: () => ID }) id: string, @Args('avatar') avatar: string): Promise<GUser> {
-    const user = await this.usersService.updateAvatar(id, avatar);
-    pubSub.publish('userUpdated', { userUpdated: user });
-    return user;
+  @UseGuards(GqlAuthGuard)
+  async updateAvatar(@Args({name: 'avatar', type: () => GraphQLUpload }) avatar: FileUpload, @CurrentUser() user: GUser): Promise<GUser> {
+    const usr = await this.usersService.updateAvatar(user._id, avatar);
+    pubSub.publish('userUpdated', { userUpdated: usr });
+    return usr;
   }
 
   // delete user
   @Mutation(() => GUser)
+  @UseGuards(GqlAuthGuard)
   async removeUser(@Args('id', { type: () => ID }) id: string): Promise<boolean> {
     const result = await this.usersService.remove(id);
     pubSub.publish('userDeleted', { userDeleted: result });
@@ -65,6 +70,7 @@ export class UsersResolver {
 
   // logout user
   @Mutation(() => Boolean)
+  @UseGuards(GqlAuthGuard)
   async logoutUser(@Context() context:Ctx): Promise<boolean> {
     const result = await this.usersService.logout(context);
     pubSub.publish('userLogout', { userLogout: result });

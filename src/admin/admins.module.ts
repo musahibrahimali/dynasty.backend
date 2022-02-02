@@ -6,7 +6,6 @@ import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from 'src/constants/jwt.constants';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Admin, AdminSchema } from './schema/admin.schema';
-import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [
@@ -22,7 +21,6 @@ import { JwtStrategy } from './strategies/jwt.strategy';
   providers: [
     AdminsResolver, 
     AdminsService,
-    JwtStrategy,
   ],
   exports: [AdminsService],
 })

@@ -10,4 +10,5 @@ export default () => ({
         host: process.env.DB_URL,
     },    
     origin: process.env.ORIGIN_URL,
+    uploadsDir: process.env.UPLOADS_DIR,
 });

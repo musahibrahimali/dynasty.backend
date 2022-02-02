@@ -6,6 +6,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
+import { graphqlUploadExpress } from 'graphql-upload';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -36,6 +37,12 @@ async function bootstrap() {
   .setDescription("This is the backend api interface for the alumni web project")
   .setVersion('1.0')
   .build();
+
+  // graphql file upload
+  app.use(graphqlUploadExpress({ 
+    maxFileSize: 1000000000, // 1GB
+    maxFiles: 10  // the maximum number of files per upload
+  }));
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

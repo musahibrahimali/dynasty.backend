@@ -8,17 +8,21 @@ import { RolesGuard } from 'src/auth/auth';
 import { GraphQLModule } from '@nestjs/graphql';
 import { UsersModule } from '../users/users.module';
 import { AdminsModule } from 'src/admin/admins.module';
+import { config } from 'dotenv';
 import * as Joi from 'joi';
+
+config();
+
 @Module({
   imports: [
     // other modules
     UsersModule,
     AdminsModule,
-
+ 
     // graphql module
     GraphQLModule.forRoot({
       installSubscriptionHandlers: true,
-      autoSchemaFile: true, // join(process.cwd(), 'src/schema.gql') "true" to generate types on the fly
+      autoSchemaFile: true,
       sortSchema: true,
       playground: true,
       debug: true,
@@ -52,11 +56,12 @@ import * as Joi from 'joi';
       },
     }),
     // connect to mongodb database
-    MongooseModule.forRoot("mongodb://localhost/dynastyurbanstyle",{
+    MongooseModule.forRoot(process.env.DB_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     }),
   ],
+
   controllers: [AppController],
   providers: [
     AppService,
