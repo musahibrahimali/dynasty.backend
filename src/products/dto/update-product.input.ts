@@ -12,7 +12,7 @@ export class UpdateProductInput extends PartialType(CreateProductInput) {
   @Field({nullable: true})
     price?: number;
 
-  @Field({nullable: true})
+  @Field(() => String, {nullable: true})
     images?: string[];
 
   @Field({nullable: true})
@@ -30,9 +30,9 @@ export class UpdateProductInput extends PartialType(CreateProductInput) {
   @Field({nullable: true})
     numInStock?: number;
 
-  @Field({nullable: true})
+  @Field(() => String, {nullable: true})
     colours?: string[];
 
-  @Field({nullable: true})
+  @Field(() => Number, {nullable: true})
     sizes?: string[];
 }

@@ -12,7 +12,7 @@ export class CreateProductInput {
   @Field()
     price: number;
 
-  @Field()
+  @Field(() => String)
     images: string[];
 
   @Field()
@@ -30,9 +30,9 @@ export class CreateProductInput {
   @Field()
     numInStock: number;
 
-  @Field()
+  @Field(() => String)
     colours: string[];
 
-  @Field()
+  @Field(() => Number)
     sizes: string[];
 }

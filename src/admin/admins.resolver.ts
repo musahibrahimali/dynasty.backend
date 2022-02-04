@@ -10,6 +10,7 @@ import { CurrentUser,GqlAuthGuard } from 'src/common/common';
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
 import { UseGuards } from '@nestjs/common';
 import { IAdmin } from './interface/admin.interface';
+import { AccessGuard, Actions, UseAbility } from 'nest-casl';
 
 // subscription handler
 const pubSub = new PubSub();
@@ -36,12 +37,16 @@ export class AdminsResolver {
 
   // find a user
   @Query(() => GAdmin, { name: 'admin' })
+  @UseGuards(GqlAuthGuard, AccessGuard)
+  @UseAbility(Actions.manage, GAdmin)
   async findOneAdmin(@CurrentUser() admin: IAdmin): Promise<IAdmin> {
     return this.adminsService.findOne(admin._id);
   }
 
   // update user
   @Mutation(() => GAdmin)
+  @UseGuards(GqlAuthGuard, AccessGuard)
+  @UseAbility(Actions.update, GAdmin)
   async updateAdmin(@Args('id', { type: () => ID }) id: string, @Args('updateAdminInput') updateAdminInput: UpdateAdminInput): Promise<IAdmin> {
     const admin = await this.adminsService.update(id, updateAdminInput);
     pubSub.publish('adminUpdated', { adminUpdated: admin });
@@ -50,15 +55,18 @@ export class AdminsResolver {
 
   // update user avatar
   @Mutation(() => GAdmin)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(GqlAuthGuard, AccessGuard)
+  @UseAbility(Actions.update, GAdmin)
   async updateAvatar(@Args({name: 'avatar', type: () => GraphQLUpload }) avatar: FileUpload, @CurrentUser() adm: IAdmin): Promise<IAdmin> {
     const admin = await this.adminsService.updateAvatar(adm._id, avatar);
     pubSub.publish('userUpdated', { userUpdated: admin });
     return admin;
-  }
+  } 
 
   // delete user
   @Mutation(() => GAdmin)
+  @UseGuards(GqlAuthGuard, AccessGuard)
+  @UseAbility(Actions.manage, GAdmin)
   async removeAdmin(@Args('id', { type: () => ID }) id: string): Promise<boolean> {
     const result = await this.adminsService.remove(id);
     pubSub.publish('adminDeleted', { adminDeleted: result });

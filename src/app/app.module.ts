@@ -11,6 +11,7 @@ import { Roles } from 'src/common/common';
 import configuration from 'src/common/config/configuration';
 import { CaslModule } from 'nest-casl';
 import * as Joi from 'joi';
+import { ProductsModule } from '../products/products.module';
 
 config();
 
@@ -19,6 +20,7 @@ config();
     // other modules
     UsersModule,
     AdminsModule,
+    ProductsModule,
 
     // casl  module configuration
     CaslModule.forRoot<Roles>({

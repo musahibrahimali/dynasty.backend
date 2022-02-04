@@ -33,7 +33,7 @@ export class GAdmin {
     salt?: string;
 
     @Field(() => [String], {nullable: true, defaultValue: ['user', 'admin']})
-    role?: string[];
+    roles?: string[];
 
     @Field({nullable: true, defaultValue: true})
     isAdmin?: boolean;

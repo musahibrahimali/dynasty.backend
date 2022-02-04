@@ -4,7 +4,7 @@ import { Roles } from 'src/common/common';
 import { GAdmin } from 'src/admin/models/admin.model';
 import { GUser } from 'src/users/models/user.model';
 
-export type Subjects = InferSubjects<typeof GAdmin>;
+export type Subjects = InferSubjects<typeof GAdmin | typeof GUser>;
 
 export const permissions: Permissions<Roles, Subjects, Actions> = {
   everyone({ can }) {

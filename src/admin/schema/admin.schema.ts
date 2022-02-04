@@ -10,7 +10,7 @@ export class Admin {
     email: string;
 
     @IsString()
-    @Prop({required: true, minlength: 8, maxlength: 15})
+    @Prop({required: true, minlength: 8})
     password: string;
 
     @IsString()
@@ -39,7 +39,7 @@ export class Admin {
 
     @IsString()
     @Prop({required: false})
-    role: string[];
+    roles: string[];
 
     @IsBoolean()
     @Prop({required: false})

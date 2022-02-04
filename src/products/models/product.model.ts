@@ -14,7 +14,7 @@ export class GProduct {
     @Field()
         price: number;
 
-    @Field()
+    @Field(() => String)
         images: string[];
 
     @Field()
@@ -32,10 +32,10 @@ export class GProduct {
     @Field()
         numInStock: number;
 
-    @Field()
+    @Field(() => String)
         colours: string[];
 
-    @Field()
+    @Field(() => Number)
         sizes: string[];
 
     @Field({nullable: true})
