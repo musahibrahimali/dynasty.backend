@@ -7,6 +7,7 @@ export class CreateAdminDto {
     phone: string;
     salt?: string;
     profile?: string;
+    salt?: string;
     role?: string[];
     isAdmin?: boolean;
 }
