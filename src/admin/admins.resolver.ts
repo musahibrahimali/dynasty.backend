@@ -3,13 +3,13 @@ import { AdminsService } from './admins.service';
 import { GAdmin } from './models/admin.model';
 import { CreateAdminInput } from './dto/create-admin.input';
 import { UpdateAdminInput } from './dto/update-admin.input';
-import {Ctx} from 'src/types/types';
+import {Ctx} from 'src/common/common';
 import { LoginAdminInput } from './dto/login-admin.input';
 import { PubSub } from 'graphql-subscriptions';
-import { CurrentUser } from 'src/common/common';
-import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
+import { CurrentUser,GqlAuthGuard } from 'src/common/common';
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
 import { UseGuards } from '@nestjs/common';
+import { IAdmin } from './interface/admin.interface';
 
 // subscription handler
 const pubSub = new PubSub();
@@ -23,26 +23,26 @@ export class AdminsResolver {
   async createAdmin(
     @Args('createAdminInput') createUserDto: CreateAdminInput,
     @Context() context: Ctx,
-  ): Promise<GAdmin> {
+  ): Promise<IAdmin> {
     const admin = await this.adminsService.create(createUserDto, context);
     return admin;
   }
 
   // log in user
   @Mutation(() => GAdmin)
-  async loginAdmin(@Args('loginAdminInput') loginAdminInput: LoginAdminInput, @Context() context: Ctx): Promise<GAdmin> {
+  async loginAdmin(@Args('loginAdminInput') loginAdminInput: LoginAdminInput, @Context() context: Ctx): Promise<IAdmin> {
     return await this.adminsService.login(loginAdminInput, context);
   }
 
   // find a user
   @Query(() => GAdmin, { name: 'admin' })
-  async findOneAdmin(@CurrentUser() admin: GAdmin): Promise<GAdmin> {
+  async findOneAdmin(@CurrentUser() admin: IAdmin): Promise<IAdmin> {
     return this.adminsService.findOne(admin._id);
   }
 
   // update user
   @Mutation(() => GAdmin)
-  async updateAdmin(@Args('id', { type: () => ID }) id: string, @Args('updateAdminInput') updateAdminInput: UpdateAdminInput): Promise<GAdmin> {
+  async updateAdmin(@Args('id', { type: () => ID }) id: string, @Args('updateAdminInput') updateAdminInput: UpdateAdminInput): Promise<IAdmin> {
     const admin = await this.adminsService.update(id, updateAdminInput);
     pubSub.publish('adminUpdated', { adminUpdated: admin });
     return admin;
@@ -51,7 +51,7 @@ export class AdminsResolver {
   // update user avatar
   @Mutation(() => GAdmin)
   @UseGuards(GqlAuthGuard)
-  async updateAvatar(@Args({name: 'avatar', type: () => GraphQLUpload }) avatar: FileUpload, @CurrentUser() adm: GAdmin): Promise<GAdmin> {
+  async updateAvatar(@Args({name: 'avatar', type: () => GraphQLUpload }) avatar: FileUpload, @CurrentUser() adm: IAdmin): Promise<IAdmin> {
     const admin = await this.adminsService.updateAvatar(adm._id, avatar);
     pubSub.publish('userUpdated', { userUpdated: admin });
     return admin;

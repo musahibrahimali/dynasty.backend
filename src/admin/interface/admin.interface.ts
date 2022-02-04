@@ -1,8 +1,8 @@
-import { ObjectType, Field, ID } from '@nestjs/graphql';
+import { Field, ID, InterfaceType } from '@nestjs/graphql';
 
-@ObjectType()
-export class GAdmin {
-    @Field(() => ID)
+@InterfaceType()
+export abstract class IAdmin {
+  @Field(() => ID)
     _id: string;
 
     @Field({ nullable: true })

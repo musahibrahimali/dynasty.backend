@@ -3,12 +3,13 @@ import { AppController } from './app.controller';
 import {MongooseModule} from '@nestjs/mongoose';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import configuration from 'src/config/configuration';
-import { RolesGuard } from 'src/auth/auth';
 import { GraphQLModule } from '@nestjs/graphql';
-import { UsersModule } from '../users/users.module';
+import { UsersModule } from 'src/users/users.module';
 import { AdminsModule } from 'src/admin/admins.module';
 import { config } from 'dotenv';
+import { Roles } from 'src/common/common';
+import configuration from 'src/common/config/configuration';
+import { CaslModule } from 'nest-casl';
 import * as Joi from 'joi';
 
 config();
@@ -18,6 +19,12 @@ config();
     // other modules
     UsersModule,
     AdminsModule,
+
+    // casl  module configuration
+    CaslModule.forRoot<Roles>({
+      // Role to grant full access, optional
+      superuserRole: Roles.admin,
+    }),
  
     // graphql module
     GraphQLModule.forRoot({
@@ -65,10 +72,6 @@ config();
   controllers: [AppController],
   providers: [
     AppService,
-    {
-      provide: 'APP_GUARD',
-      useClass: RolesGuard,
-    }
   ],
 })
 

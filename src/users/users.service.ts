@@ -2,18 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { generateSalt } from 'src/common/common';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
-import { GUser } from './models/user.model';
 import { hashPassword, comparePassword } from 'src/common/functions/common.function';
 import { Model } from 'mongoose';
 import { User, UsersModel } from './schema/user.schema';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserInput } from './dto/login-user.input';
 import { InjectModel } from '@nestjs/mongoose';
-import {Ctx} from 'src/types/types';
+import {Ctx} from 'src/common/common';
 import { ConfigService } from '@nestjs/config';
 import { FileUpload } from 'graphql-upload';
 import * as fs from 'fs';
 import * as path from 'path';
+import { IUser } from './interface/user.interface';
 
 @Injectable()
 export class UsersService {
@@ -24,7 +24,7 @@ export class UsersService {
   ) {}
 
   // create a new user
-  async create(createUserInput: CreateUserInput, context:Ctx): Promise<GUser> {
+  async create(createUserInput: CreateUserInput, context:Ctx): Promise<IUser> {
     try{
       createUserInput.displayName = createUserInput.firstName + ' ' + createUserInput.lastName;
       // generate salt 
@@ -57,7 +57,7 @@ export class UsersService {
   }
 
   // login user
-  async login(loginUserInput:LoginUserInput, context: Ctx): Promise<GUser> {
+  async login(loginUserInput:LoginUserInput, context: Ctx): Promise<IUser> {
     const email = loginUserInput.email;
     const password = loginUserInput.password;
     const user = await this.usersModel.findOne({ email });
@@ -84,7 +84,7 @@ export class UsersService {
   }
 
   // validate social user
-  async validateSocialUser(socialId: string, user: CreateUserInput): Promise<GUser> {
+  async validateSocialUser(socialId: string, user: CreateUserInput): Promise<IUser> {
     // check if user already exists in our db, if not create a new user
     const _user = await this.usersModel.findOne({socialId});
     if(!_user){
@@ -96,7 +96,7 @@ export class UsersService {
   }
 
   // find a user by id
-  async findOne(id: string): Promise<GUser> {
+  async findOne(id: string): Promise<IUser> {
     const user = await this.usersModel.findOne({_id: id});
     return user;
   }
@@ -108,14 +108,14 @@ export class UsersService {
   }
 
   // update user
-  async update(id: string, updateUserInput: UpdateUserInput): Promise<GUser> {
+  async update(id: string, updateUserInput: UpdateUserInput): Promise<IUser> {
     // find and update user
     const user = await this.usersModel.findByIdAndUpdate(id, updateUserInput, { new: true });
     return user;
   }
 
   // update user avatar
-  async updateAvatar(id: string, avatar: FileUpload): Promise<GUser> {
+  async updateAvatar(id: string, avatar: FileUpload): Promise<IUser> {
     try{
       const { createReadStream, filename } = avatar;
       const stream = createReadStream();

@@ -5,8 +5,7 @@ import { Admin, AdminsModel } from './schema/admin.schema';
 import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import {Ctx} from 'src/types/types';
-import { GAdmin } from './models/admin.model';
+import {Ctx} from 'src/common/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { generateSalt } from 'src/common/common';
 import { comparePassword, hashPassword } from 'src/common/functions/common.function';
@@ -14,6 +13,7 @@ import { LoginAdminInput } from './dto/login-admin.input';
 import { FileUpload } from 'graphql-upload';
 import * as fs from 'fs';
 import * as path from 'path';
+import { IAdmin } from './interface/admin.interface';
 
 @Injectable()
 export class AdminsService {
@@ -24,7 +24,7 @@ export class AdminsService {
   ) {}
 
   // create a new admin
-  async create(createAdminInput: CreateAdminInput, context:Ctx): Promise<GAdmin> {
+  async create(createAdminInput: CreateAdminInput, context:Ctx): Promise<IAdmin> {
     try{
       createAdminInput.displayName = createAdminInput.firstName + ' ' + createAdminInput.lastName;
       // generate salt 
@@ -57,7 +57,7 @@ export class AdminsService {
   }
 
   // login admin
-  async login(loginUserInput:LoginAdminInput, context: Ctx): Promise<GAdmin> {
+  async login(loginUserInput:LoginAdminInput, context: Ctx): Promise<IAdmin> {
     const email = loginUserInput.email;
     const password = loginUserInput.password;
     const admin = await this.adminsModel.findOne({ email });
@@ -84,26 +84,26 @@ export class AdminsService {
   }
 
   // find a admin by id
-  async findOne(id: string): Promise<GAdmin> {
+  async findOne(id: string): Promise<IAdmin> {
     const admin = await this.adminsModel.findOne({_id: id});
     return admin;
   }
 
   // validate jwt admin
-  async validateUser(payload: any): Promise<GAdmin> {
+  async validateUser(payload: any): Promise<IAdmin> {
     const admin = await this.adminsModel.findOne({ _id: payload.sub });
     return admin;
   }
 
   // update user
-  async update(id: string, updateAdminInput: UpdateAdminInput): Promise<GAdmin> {
+  async update(id: string, updateAdminInput: UpdateAdminInput): Promise<IAdmin> {
     // find and update user
     const admin = await this.adminsModel.findByIdAndUpdate(id, updateAdminInput, { new: true });
     return admin;
   }
 
   // update user avatar
-  async updateAvatar(id: string, avatar: FileUpload): Promise<GAdmin> {
+  async updateAvatar(id: string, avatar: FileUpload): Promise<IAdmin> {
     try{
       const { createReadStream, filename } = avatar;
       const stream = createReadStream();
