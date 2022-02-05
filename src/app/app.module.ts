@@ -25,7 +25,7 @@ config();
     // casl  module configuration
     CaslModule.forRoot<Roles>({
       // Role to grant full access, optional
-      superuserRole: Roles.admin,
+      superuserRole: Roles.admin, // all admins are super users
     }),
  
     // graphql module
