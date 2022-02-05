@@ -6,6 +6,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
+import { graphqlUploadExpress } from 'graphql-upload';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -23,7 +24,12 @@ async function bootstrap() {
 
   // middlewares
   app.use(cookieParser());
-  app.use(helmet());
+  app.use(
+    helmet({ 
+      contentSecurityPolicy: false, 
+      crossOriginEmbedderPolicy: false 
+    })
+  );
 
   app.useGlobalPipes(new ValidationPipe());
   const config = new DocumentBuilder()
@@ -31,6 +37,12 @@ async function bootstrap() {
   .setDescription("This is the backend api interface for the alumni web project")
   .setVersion('1.0')
   .build();
+
+  // graphql file upload
+  app.use(graphqlUploadExpress({ 
+    maxFileSize: 1000000000, // 1GB
+    maxFiles: 10  // the maximum number of files per upload
+  }));
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
@@ -40,6 +52,7 @@ async function bootstrap() {
   await app.listen(port).then(() => {
     console.log(`Server running on port http://localhost:${port}`);
     console.log(`Swagger running on port http://localhost:${port}/api`);
+    console.log(`GraphQl running on port http://localhost:${port}/graphql`);
     console.log("Press CTRL-C to stop server");
   }).catch((err) => {
     console.log("There was an error starting server. ", err);
