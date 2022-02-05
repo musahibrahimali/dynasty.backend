@@ -1,0 +1,123 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreateAdminInput {
+  avatar: ID
+  displayName: String
+  email: String!
+  firstName: String!
+  isAdmin: Boolean = true
+  lastName: String!
+  password: String
+  phone: String
+  roles: [String!] = ["user", "admin"]
+  salt: String
+}
+
+input CreateUserInput {
+  avatar: ID
+  displayName: String
+  email: String!
+  firstName: String!
+  isAdmin: Boolean = false
+  lastName: String!
+  password: String
+  phone: String
+  roles: [String!] = ["user"]
+  salt: String
+  social: String = ""
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type GAdmin {
+  _id: ID!
+  avatar: String
+  createdAt: DateTime
+  displayName: String!
+  email: String!
+  firstName: String!
+  isAdmin: Boolean
+  lastName: String!
+  password: String
+  phone: String
+  role: [String!]
+  salt: String
+  social: String
+  updatedAt: DateTime
+}
+
+type GUser {
+  _id: ID!
+  avatar: String
+  createdAt: DateTime
+  displayName: String!
+  email: String!
+  firstName: String!
+  isAdmin: Boolean
+  lastName: String!
+  password: String
+  phone: String
+  roles: [String!]
+  salt: String
+  social: String
+  updatedAt: DateTime
+}
+
+input LoginAdminInput {
+  email: String!
+  password: String!
+}
+
+input LoginUserInput {
+  email: String!
+  password: String!
+}
+
+type Mutation {
+  createAdmin(createAdminInput: CreateAdminInput!): GAdmin!
+  createUser(createUserInput: CreateUserInput!): GUser!
+  loginAdmin(loginAdminInput: LoginAdminInput!): GAdmin!
+  loginUser(loginUserInput: LoginUserInput!): GUser!
+  logoutAdmin: Boolean!
+  logoutUser: Boolean!
+  removeAdmin(id: ID!): GAdmin!
+  removeUser(id: ID!): GUser!
+  updateAdmin(id: ID!, updateAdminInput: UpdateAdminInput!): GAdmin!
+  updateAdminAvatar(avatar: String!, id: ID!): GAdmin!
+  updateUser(id: ID!, updateUserInput: UpdateUserInput!): GUser!
+  updateUserAvatar(avatar: String!, id: ID!): GUser!
+}
+
+type Query {
+  admin: GAdmin!
+  user: GUser!
+}
+
+input UpdateAdminInput {
+  avatar: ID
+  displayName: String
+  email: String
+  firstName: String
+  isAdmin: Boolean = true
+  lastName: String
+  password: String
+  phone: String
+  roles: [String!] = ["user", "admin"]
+  salt: String
+}
+
+input UpdateUserInput {
+  avatar: ID
+  displayName: String
+  firstName: String
+  lastName: String
+  password: String
+  phone: String
+  salt: String
+  social: String = ""
+}
