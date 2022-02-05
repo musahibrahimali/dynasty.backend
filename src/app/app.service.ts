@@ -7,7 +7,7 @@ export class AppService {
   getHello(): {name: string, message: string} {
     const port = this.configService.get('PORT');
     return {
-      name: 'NestJS Rest Api',
+      name: 'Dyansty Urban Style API',
       message: `The api is running and live now. to access the core functionalities, please visit the api documentation by navigating to http://localhost:${port}/api`,
     };
   }

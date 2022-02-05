@@ -10,7 +10,7 @@ import { graphqlUploadExpress } from 'graphql-upload';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    logger: ['error', 'warn', 'debug', 'verbose'], // 'log'
+    logger: ['error', 'warn', 'debug', 'verbose', 'log'], // 'log' // remove log to disable logging
   });
   // app config service
   const configService = app.get(ConfigService);
@@ -33,9 +33,9 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
   const config = new DocumentBuilder()
-  .setTitle("Dynasty Urban Style Web App API")
-  .setDescription("This is the backend api interface for the alumni web project")
-  .setVersion('1.0')
+  .setTitle("Dynasty Urban Style Web App API version 1.0.0")
+  .setDescription("This is the backend API interface for the Dynasty Urban Style Web App")
+  .setVersion('1.0.0')
   .build();
 
   // graphql file upload
