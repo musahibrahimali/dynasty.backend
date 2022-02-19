@@ -1,0 +1,14 @@
+.idea
+node_modules
+.vscode
+.vs 
+/build
+/dist
+/node_modules
+/out
+
+.env
+.env.local
+.env.development
+.env.production
+.env.test
