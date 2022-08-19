@@ -1,8 +1,10 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { IsBoolean, IsEmail, IsPhoneNumber, IsString } from "class-validator";
+import {IsArray, IsBoolean, IsEmail, IsPhoneNumber, IsString} from "class-validator";
 import { Document } from "mongoose";
+import {Role} from "@common/common";
 
-export type AdminsModel = Admin & Document;
+export type AdminModel = Admin & Document;
+
 @Schema({timestamps: true})
 export class Admin {
     @IsEmail()
@@ -37,9 +39,9 @@ export class Admin {
     @Prop({required: false,})
     salt: string;
 
-    @IsString()
+    @IsArray()
     @Prop({required: false})
-    roles: string[];
+    roles: Role[];
 
     @IsBoolean()
     @Prop({required: false})

@@ -1,48 +1,30 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import {MongooseModule} from '@nestjs/mongoose';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { GraphQLModule } from '@nestjs/graphql';
-import { UsersModule } from 'src/users/users.module';
-import { AdminsModule } from 'src/admin/admins.module';
 import { config } from 'dotenv';
-import { Roles } from 'src/common/common';
-import configuration from 'src/common/config/configuration';
 import { CaslModule } from 'nest-casl';
 import * as Joi from 'joi';
-import { ProductsModule } from '../products/products.module';
+import {ProductModule} from "@product/product.module";
+import {Role, RolesGuard} from "@common/common";
+import configuration from "@common/config/configuration";
+import {UserModule} from "@user/user.module";
+import {AdminModule} from "@admin/admin.module";
+import {AppController} from "@app/app.controller";
+import {AppService} from "@app/app.service";
 
 config();
 
 @Module({
   imports: [
     // other modules
-    UsersModule,
-    AdminsModule,
-    ProductsModule,
+    UserModule,
+    AdminModule,
+    ProductModule,
 
     // casl  module configuration
-    CaslModule.forRoot<Roles>({
+    CaslModule.forRoot<Role>({
       // Role to grant full access, optional
-      superuserRole: Roles.admin, // all admins are super users
-    }),
- 
-    // graphql module
-    GraphQLModule.forRoot({
-      installSubscriptionHandlers: true,
-      autoSchemaFile: true,
-      sortSchema: true,
-      playground: true,
-      debug: true,
-      cors: {
-        origin: true,
-        credentials: true,
-      },
-      // add context object for request and response
-      context: ({ req, res }) => {
-        return {req, res};
-      },
+      superuserRole: Role.Admin, // all admins are super user
     }),
 
     // configuration module
@@ -59,13 +41,13 @@ config();
         PORT: Joi.number().default(5000),
       }),
       validationOptions: {
-        // allow unknown keys (change to false to fail on unknown keys)
+        // allow unknown keys (false to fail on unknown keys)
         allowUnknown: true,
         abortEarly: true,
       },
     }),
     // connect to mongodb database
-    MongooseModule.forRoot(process.env.DB_URL, {
+    MongooseModule.forRoot(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     }),
@@ -74,6 +56,10 @@ config();
   controllers: [AppController],
   providers: [
     AppService,
+    {
+      provide: 'APP_GUARD',
+      useClass: RolesGuard,
+    }
   ],
 })
 

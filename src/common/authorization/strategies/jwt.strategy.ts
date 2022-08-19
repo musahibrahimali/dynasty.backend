@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
-import {AdminService} from "@admin/admin.service";
 import {jwtConstants} from "@common/common";
+
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-    constructor(private readonly adminsService: AdminService) {
+    constructor() {
         super({
             // get access token form request object
             jwtFromRequest: (request: Request) => {
@@ -20,6 +20,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     async validate(payload: any) {
-        return await this.adminsService.validateAdmin(payload);
+        return { userId: payload.sub, username: payload.username }; 
     }
 }

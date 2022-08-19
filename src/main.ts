@@ -1,63 +1,133 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app/app.module';
+/*
+ * ######################################################
+ * ################# DOCUMENTATION ######################
+ * ######################################################
+ *
+ * ######################################################
+ * ######################################################
+ * ############ AUTHOR : MUSAH IBRAHIM ALI        #######
+ * ############ EMAIL : MUSAHIBRAHIMALI@GMAIL.COM #######
+ * ############ PHONE : +233(0)542864498          #######
+ * ######################################################
+ * ######################################################
+ * */
+
+/*
+ * ######################################################
+ * ################## ALL IMPORTS #######################
+ * ######################################################
+ * */
+import {NestFactory} from '@nestjs/core';
 import {ConfigService} from '@nestjs/config';
-import { NestExpressApplication } from '@nestjs/platform-express';
-import { ValidationPipe } from '@nestjs/common';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import {NestExpressApplication} from '@nestjs/platform-express';
+import {ValidationPipe, VersioningType} from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
-import { graphqlUploadExpress } from 'graphql-upload';
+import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
+import csurf from 'csurf';
+import {AppModule} from "@app/app.module";
 
+/*
+* #################################
+* ############# API VERSION #######
+* #################################
+* */
+const apiVersion = '1.0.1';
+
+/*
+ * ######################################################
+ * ############### BOOTSTRAP THE APP ####################
+ * ######################################################
+ * */
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    logger: ['error', 'warn', 'debug', 'verbose', 'log'], // 'log' // remove log to disable logging
+    logger: ['error', 'warn', 'debug', 'verbose'], // 'log'
   });
-  // app config service
   const configService = app.get(ConfigService);
-  const origin = configService.get<string>('ORIGIN_URL');
-  // enable CORS
+  const originUrl = configService.get<string>('ORIGIN_URL');
+
+  /*
+   * ######################################################
+   * ##################### MIDDLEWARES ####################
+   * ######################################################
+   * */
+  /* ENABLE CORS */
   app.enableCors({
-    origin: origin,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    preflightContinue: false,
+    credentials: true,
+    origin: originUrl,
+    methods: 'HEAD, GET,POST,PUT,DELETE,PATCH',
+  });
+  // cookie parser
+  app.use(cookieParser());
+
+  /* APP VERSIONING */
+  app.enableVersioning({
+    type: VersioningType.URI,
   });
 
-  // middlewares
-  app.use(cookieParser());
+  /* USE HELMET TO ADD A SECURITY LAYER */
   app.use(
-    helmet({ 
-      contentSecurityPolicy: false, 
-      crossOriginEmbedderPolicy: false 
-    })
+      helmet({
+        contentSecurityPolicy: false,
+        crossOriginEmbedderPolicy: false,
+      }),
   );
 
+  /*
+  * ########################################################
+  * ######## PREVENT XSS ATTACKS AND SQL INJECTION #########
+  * ########################################################
+  * */
+  app.use(
+      csurf({
+        cookie: {
+          sameSite: true,
+          secure:true,
+        }
+      }),
+  );
+
+  /*
+  * ###########################################################
+  * #################### USE GLOBAL PIPES #####################
+  * ###########################################################
+  * */
   app.useGlobalPipes(new ValidationPipe());
+  /*
+  * ###########################################################
+  * ##################### SWAGGER CONFIG ######################
+  * ###########################################################
+  * */
   const config = new DocumentBuilder()
-  .setTitle("Dynasty Urban Style Web App API version 1.0.0")
-  .setDescription("This is the backend API interface for the Dynasty Urban Style Web App")
-  .setVersion('1.0.0')
-  .build();
-
-  // graphql file upload
-  app.use(graphqlUploadExpress({ 
-    maxFileSize: 1000000000, // 1GB
-    maxFiles: 10  // the maximum number of files per upload
-  }));
-
+      .setTitle(`Dream Builder Web App API version ${{apiVersion}}`)
+      .setDescription("This is the backend API interface for the Dream Builder Web App")
+      .setVersion(`${apiVersion}`)
+      .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  // get the port from the config file
+  /*
+  * ###########################################################
+  * ############## START THE SERVER FOR THE APP ###############
+  * ###########################################################
+  * */
   const port = configService.get<number>('PORT');
-  await app.listen(port).then(() => {
-    console.log(`Server running on port http://localhost:${port}`);
-    console.log(`Swagger running on port http://localhost:${port}/api`);
-    console.log(`GraphQl running on port http://localhost:${port}/graphql`);
-    console.log("Press CTRL-C to stop server");
-  }).catch((err) => {
-    console.log("There was an error starting server. ", err);
-  });
+  await app
+      .listen(port)
+      .then(() => {
+        console.log(`Server running on port http://localhost:${port}`);
+        console.log(`Swagger running on port http://localhost:${port}/api`);
+        console.log('Press CTRL-C to stop server');
+      })
+      .catch((err) => {
+        console.log('There was an error starting server. ', err);
+      });
 }
 
-// start the application
-bootstrap();
+
+/*
+* ###########################################################
+* #################### BOOTSTRAP THE APP ####################
+* ###########################################################
+* */
+bootstrap().then(() => console.log());
