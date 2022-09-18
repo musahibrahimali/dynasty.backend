@@ -2,19 +2,19 @@ export {
     CHECK_POLICIES_KEY,
     CheckPolicies,Roles,
     ROLES_KEY,
-} from './decorators/decorators';
+} from './decorators';
 
 export {
     ManageUserPolicyHandler,
     ReadAdminPolicyHandler,
     ReadUserPolicyHandler,
-} from './handlers/handlers';
+} from './handlers';
 export {
     JwtAuthGuard,
     RolesGuard,
     PoliciesGuard,
     GoogleAuthGuard,
     FacebookAuthGuard,
-} from './guards/guards';
+} from './guards';
 
 export {JwtStrategy} from './strategies/jwt.strategy';

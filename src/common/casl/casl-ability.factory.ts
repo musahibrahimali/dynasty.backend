@@ -5,10 +5,9 @@ import {
     ExtractSubjectType,
     InferSubjects
 } from '@casl/ability';
-import {User} from "@user/schema/user.schema";
-import {Admin} from "@admin/schema/admin.schema";
-import {Action} from "@common/common";
-
+import {User} from "../../user";
+import {Admin} from "../../admin";
+import {Action} from "../enums";
 
 
 type Subjects = InferSubjects<typeof User | typeof Admin> | 'all';

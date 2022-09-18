@@ -4,13 +4,13 @@ import { ConfigModule } from '@nestjs/config';
 import { config } from 'dotenv';
 import { CaslModule } from 'nest-casl';
 import * as Joi from 'joi';
-import {ProductModule} from "@product/product.module";
-import {Role, RolesGuard} from "@common/common";
-import configuration from "@common/config/configuration";
-import {UserModule} from "@user/user.module";
-import {AdminModule} from "@admin/admin.module";
-import {AppController} from "@app/app.controller";
-import {AppService} from "@app/app.service";
+import {UserModule} from "../user";
+import {AdminModule} from "../admin";
+import {ProductModule} from "../product";
+import {Role, RolesGuard} from "../common";
+import configuration from "../common/config/configuration";
+import {AppController} from "./app.controller";
+import {AppService} from "./app.service";
 
 config();
 
@@ -24,7 +24,7 @@ config();
     // casl  module configuration
     CaslModule.forRoot<Role>({
       // Role to grant full access, optional
-      superuserRole: Role.Admin, // all admins are super user
+      superuserRole: Role.Admin, // all admins are super-user
     }),
 
     // configuration module

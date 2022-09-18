@@ -1,5 +1,5 @@
-export {jwtConstants} from './constants/constants';
-export {Role,Action} from './enums/enums';
+export {jwtConstants} from './constants';
+export {Role,Action} from './enums';
 export {
     comparePassword, 
     generateSalt, 
@@ -19,7 +19,7 @@ export {
     CHECK_POLICIES_KEY,
     JwtStrategy,
     ManageUserPolicyHandler,
-} from './authorization/authorization';
+} from './authorization';
 
 export {
     PolicyHandler,
@@ -28,4 +28,4 @@ export {
     IPolicyHandler,
     IProduct,
     IUserError,
-} from './interface/interface';
+} from './interface';

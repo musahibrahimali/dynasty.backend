@@ -8,9 +8,9 @@ import {InjectModel} from '@nestjs/mongoose';
 import {Model} from 'mongoose';
 import {JwtService} from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import {User, UserModel} from "@user/schema/user.schema";
-import {CreateUserDto} from "@user/dto/create-user.dto";
-import {generateSalt, hashPassword, IUser, IUserError} from "@common/common";
+import {User, UserModel} from "./schema/user.schema";
+import {CreateUserDto} from "./dto";
+import {generateSalt, hashPassword, IUser, IUserError} from "../common";
 
 @Injectable()
 export class UserService {
@@ -267,7 +267,7 @@ export class UserService {
           salt: "",
           passwordResetKey: "",
         };
-      }).filter(user => user.isAdmin !== true);
+      });
     }catch(err){
       return undefined;
     }

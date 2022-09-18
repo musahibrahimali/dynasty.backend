@@ -7,10 +7,10 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "target": "es2017",
+    "target": "esnext",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
+    "baseUrl": ".",
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
@@ -18,17 +18,17 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "paths": {
-      "@app": ["src/app"],
-      "@app/*": ["src/app/*"],
-      "@common": ["src/common"],
-      "@common/*": ["src/common/*"],
-      "@admin": ["src/admin"],
-      "@admin/*": ["src/admin/*"],
-      "@user": ["src/user"],
-      "@user/*": ["src/user/*"],
-      "@product": ["src/product"],
-      "@product/*": ["src/product/*"],
-    }
+//    "paths": {
+//      "@app": ["src/app"],
+//      "@app/*": ["src/app/*"],
+//      "@common": ["src/common"],
+//      "@common/*": ["src/common/*"],
+//      "@admin": ["src/admin"],
+//      "@admin/*": ["src/admin/*"],
+//      "@user": ["src/user"],
+//      "@user/*": ["src/user/*"],
+//      "@product": ["src/product"],
+//      "@product/*": ["src/product/*"],
+//    }
   }
 }

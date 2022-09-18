@@ -6,14 +6,22 @@
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from 'src/common/common';
+import { jwtConstants } from '../common';
 import { MongooseModule } from '@nestjs/mongoose';
-import {Admin, AdminSchema} from "@admin/schema/admin.schema";
-import {AdminService} from "@admin/admin.service";
-import {AdminController} from "@admin/admin.controller";
+import {AdminService} from "./admin.service";
+import {AdminController} from "./admin.controller";
+import {Admin, AdminSchema} from "./schema/admin.schema";
+import {FileModule} from "../file";
 
 @Module({
   imports: [
+    /*
+    * ####################################################################
+    * ########################## CUSTOM MODULE ###########################
+    * ####################################################################
+    * */
+    FileModule,
+
       /*
       * #############################################################
       * #################### PASSPORT MODULE ########################

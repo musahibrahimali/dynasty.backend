@@ -11,7 +11,7 @@ interface IProduct extends Document {
     rating: number;
     numReviews: number;
     numInStock: number;
-    colours: string[];
+    colors: string[];
     sizes: string[];
     createdAt?: Date;
     updatedAt?: Date;

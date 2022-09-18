@@ -2,7 +2,7 @@
   "name": "dynasty",
   "version": "0.0.1",
   "description": "The backend api for the dynasty urban style online shop",
-  "author": "Musah Ibrahim Ali",
+  "author": "Musah Ibrahim Ali (MISTUDIOSINC)",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -48,6 +48,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.5.1",
+    "stripe": "^10.3.0",
     "swagger-ui-express": "^4.3.0"
   },
   "devDependencies": {
@@ -68,6 +69,7 @@
     "@types/passport-google-oauth20": "^2.0.11",
     "@types/passport-jwt": "^3.0.6",
     "@types/pump": "^1.1.1",
+    "@types/stripe": "^8.0.417",
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",

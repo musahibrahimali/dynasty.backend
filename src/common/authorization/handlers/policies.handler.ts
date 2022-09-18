@@ -1,8 +1,8 @@
-import {IPolicyHandler} from "@common/interface/casl.interface";
-import {AppAbility} from "@common/casl/casl-ability.factory";
-import {Action} from "@common/common";
-import {User} from "@user/schema/user.schema";
-import {Admin} from "@admin/schema/admin.schema";
+import {IPolicyHandler} from "../../interface";
+import {AppAbility} from "../../casl";
+import {Action} from "../../enums";
+import {User} from "../../../user";
+import {Admin} from "../../../admin";
 
 
 export class ReadUserPolicyHandler implements IPolicyHandler {

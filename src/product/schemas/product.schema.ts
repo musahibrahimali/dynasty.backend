@@ -44,7 +44,7 @@ export class Product {
 
     @IsArray()
     @Prop({required: true})
-    colours: string[];
+    colors: string[];
 
     @IsArray()
     @Prop({required: true})

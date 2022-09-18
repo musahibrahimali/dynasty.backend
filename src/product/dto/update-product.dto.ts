@@ -8,6 +8,6 @@ export class UpdateProductDto{
     rating: number;
     numReviews: number;
     numInStock: number;
-    colours: string[];
+    colors: string[];
     sizes: string[];
 }

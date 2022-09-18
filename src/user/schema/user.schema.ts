@@ -9,8 +9,8 @@ import {IsArray, IsBoolean, IsEmail, IsPhoneNumber, IsString} from "class-valida
 import { Document } from "mongoose";
 import {Exclude, Type} from "class-transformer";
 import * as mongoose from "mongoose";
-import {Role} from "@common/enums/role.enum";
-import {Product} from "@product/schemas/product.schema";
+import {Role} from "../../common";
+import {Product} from "../../product";
 
 export type UserModel = User & Document;
 

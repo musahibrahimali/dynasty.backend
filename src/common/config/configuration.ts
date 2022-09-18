@@ -10,4 +10,5 @@ export default () => ({
   },
   origin: process.env.ORIGIN_URL,
   uploadsDir: process.env.UPLOADS_DIR,
+  apiVersion: process.env.API_VERSION,
 });

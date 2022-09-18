@@ -5,11 +5,9 @@ import {ConfigService} from '@nestjs/config';
 import {InjectModel} from '@nestjs/mongoose';
 import * as fs from 'fs';
 import * as path from 'path';
-import {Admin, AdminModel} from "@admin/schema/admin.schema";
-import {CreateAdminDto} from "@admin/dto/create-admin.dto";
-import {comparePassword, generateSalt, hashPassword, IAdmin} from "@common/common";
-import {LoginAdminDto} from "@admin/dto/login-admin.dto";
-import {UpdateAdminDto} from "@admin/dto/update-admin.dto";
+import {Admin, AdminModel} from "./schema/admin.schema";
+import {CreateAdminDto, LoginAdminDto, UpdateAdminDto} from "./dto";
+import {comparePassword, generateSalt, hashPassword, IAdmin} from "../common";
 
 @Injectable()
 export class AdminService {

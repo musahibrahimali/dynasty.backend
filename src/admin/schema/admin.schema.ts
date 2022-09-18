@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import {IsArray, IsBoolean, IsEmail, IsPhoneNumber, IsString} from "class-validator";
 import { Document } from "mongoose";
-import {Role} from "@common/common";
+import {Role} from "../../common";
 
 export type AdminModel = Admin & Document;
 

@@ -17,12 +17,11 @@ import {ApiCreatedResponse} from '@nestjs/swagger';
 import {FileInterceptor} from '@nestjs/platform-express';
 import {boolean} from 'joi';
 import {ConfigService} from '@nestjs/config';
-import {UserService} from "@user/user.service";
-import {FacebookAuthGuard, GoogleAuthGuard, IUser, JwtAuthGuard} from "@common/common";
-import {CreateUserDto} from "@user/dto/create-user.dto";
-import {ProfileInfoDto} from "@user/dto/profile.response.dto";
+import {UserService} from "./user.service";
+import {CreateUserDto, ProfileInfoDto} from "./dto";
+import {FacebookAuthGuard, GoogleAuthGuard, IUser, JwtAuthGuard} from "../common";
 
-@Controller({version: '1', path: 'users'})
+@Controller({version: '1', path: 'user'})
 export class UserController {
     constructor(
         private userService: UserService,
@@ -35,7 +34,7 @@ export class UserController {
     * #############################################################################
     * */
     @ApiCreatedResponse({type: String, description: 'User created'})
-    @Post('register')
+    @Post('sign-up')
     async registerUser(
         @Body() createUserDto: CreateUserDto,
         @Response({passthrough: true}) response
@@ -254,7 +253,7 @@ export class UserController {
     * */
     @ApiCreatedResponse({type: boolean, description: "User account deleted"})
     @UseGuards(JwtAuthGuard)
-    @Delete('delete-user/:id')
+    @Delete('delete-account/:id')
     async deleteUserData(
         @Param("id") id: string,
         @Response({passthrough: true}) response

@@ -7,38 +7,48 @@ import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
-import {jwtConstants, JwtStrategy} from "@common/common";
-import {User, UserSchema} from "@user/schema/user.schema";
-import {UserService} from "@user/user.service";
-import {FacebookStrategy, GoogleStrategy} from "@user/strategies/strategies";
-import {UserController} from "@user/user.controller";
+import {jwtConstants, JwtStrategy} from "../common";
+import {User, UserSchema} from "./schema/user.schema";
+import {UserService} from "./user.service";
+import {FacebookStrategy, GoogleStrategy} from "./strategies";
+import {UserController} from "./user.controller";
+import {PaymentModule} from "../payment";
+import {FileModule} from "../file";
 
 
 @Module({
   imports: [
-    /*
-    * ####################################################################
-    * ######################## PASSPORT MODULE ###########################
-    * ####################################################################
-    * */
-    PassportModule.register({ defaultStrategy: 'jwt' }),
-    /*
-    * ####################################################################
-    * ######################## JWT MODULE ################################
-    * ####################################################################
-    * */
-    JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: jwtConstants.expiresIn },
-    }),
-    /*
-    * ####################################################################
-    * ######################## MONGOOSE MODULE ###########################
-    * ####################################################################
-    * */
-    MongooseModule.forFeature([
-      { name: User.name, schema: UserSchema },
-    ]),
+      /*
+      * ####################################################################
+      * ########################## CUSTOM MODULE ###########################
+      * ####################################################################
+      * */
+      PaymentModule,
+      FileModule,
+
+      /*
+      * ####################################################################
+      * ######################## PASSPORT MODULE ###########################
+      * ####################################################################
+      * */
+      PassportModule.register({ defaultStrategy: 'jwt' }),
+      /*
+      * ####################################################################
+      * ######################## JWT MODULE ################################
+      * ####################################################################
+      * */
+      JwtModule.register({
+        secret: jwtConstants.secret,
+        signOptions: { expiresIn: jwtConstants.expiresIn },
+      }),
+      /*
+      * ####################################################################
+      * ######################## MONGOOSE MODULE ###########################
+      * ####################################################################
+      * */
+      MongooseModule.forFeature([
+        { name: User.name, schema: UserSchema },
+      ]),
   ],
   /*
     * ####################################################################

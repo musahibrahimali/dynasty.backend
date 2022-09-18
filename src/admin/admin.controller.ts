@@ -1,9 +1,8 @@
 import {Body, Controller, Post, Response} from '@nestjs/common';
 import {ApiCreatedResponse} from "@nestjs/swagger";
 import {ConfigService} from "@nestjs/config";
-import {CreateAdminDto} from "@admin/dto/create-admin.dto";
-import {LoginAdminDto} from "@admin/dto/login-admin.dto";
-import {AdminService} from "@admin/admin.service";
+import {AdminService} from "./admin.service";
+import {CreateAdminDto, LoginAdminDto} from "./dto";
 
 @Controller({version: '1', path: 'admins'})
 export class AdminController {

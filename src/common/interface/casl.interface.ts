@@ -1,4 +1,4 @@
-import {AppAbility} from "@common/casl/casl-ability.factory";
+import {AppAbility} from "../casl";
 
 
 export interface IPolicyHandler {
