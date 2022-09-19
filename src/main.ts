@@ -60,4 +60,4 @@ async function bootstrap() {
 }
 
 // start the application
-bootstrap();
+bootstrap().then(() => console.log());

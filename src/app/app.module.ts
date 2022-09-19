@@ -12,6 +12,7 @@ import configuration from 'src/common/config/configuration';
 import { CaslModule } from 'nest-casl';
 import * as Joi from 'joi';
 import { ProductsModule } from '../products/products.module';
+import {ApolloServerPluginLandingPageLocalDefault} from "apollo-server-core";
 
 config();
 
@@ -33,7 +34,10 @@ config();
       installSubscriptionHandlers: true,
       autoSchemaFile: true,
       sortSchema: true,
-      playground: true,
+      playground: false,
+      plugins: [
+        ApolloServerPluginLandingPageLocalDefault()
+      ],
       debug: true,
       cors: {
         origin: true,
