@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { InjectModel } from '@nestjs/mongoose';
-import { FileUpload } from 'graphql-upload';
-import { Model } from 'mongoose';
-import { CreateProductInput } from './dto/create-product.input';
-import { UpdateProductInput } from './dto/update-product.input';
-import { IProduct } from './interface/product.interface';
-import { Product, ProductsModel } from './schemas/product.schema';
+import {Injectable} from '@nestjs/common';
+import {ConfigService} from '@nestjs/config';
+import {InjectModel} from '@nestjs/mongoose';
+import {FileUpload} from 'graphql-upload';
+import {Model} from 'mongoose';
+import {CreateProductInput} from './dto/create-product.input';
+import {UpdateProductInput} from './dto/update-product.input';
+import {IProduct} from './interface/product.interface';
+import {Product, ProductsModel} from './schemas/product.schema';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -18,9 +18,8 @@ export class ProductsService {
   ) {}
   async create(createProductInput: CreateProductInput, images: FileUpload[]): Promise<IProduct> {
     // get all the names of the images
-    const imageNames = images.map(image => image.filename);
     // update the createProductInput with the image names
-    createProductInput.images = imageNames;
+    createProductInput.images = images.map(image => image.filename);
     // upload the images
     const uploadImages = await Promise.all(images.map(image => this.uploadImage(image, createProductInput.category)));
     if(uploadImages){
@@ -34,26 +33,22 @@ export class ProductsService {
 
   // find all products
   async findAll():Promise<IProduct[]> {
-    const products = await this.productModel.find();
-    return products;
+    return this.productModel.find();
   }
 
   // find products by category
   async findByCategory(category: string):Promise<IProduct[]> {
-    const products = await this.productModel.find({category: category});
-    return products;
+    return this.productModel.find({category: category});
   }
 
   // find products by brand
   async findByBrand(brand: string):Promise<IProduct[]> {
-    const products = await this.productModel.find({brand: brand});
-    return products;
+    return this.productModel.find({brand: brand});
   }
 
   // find one product
   async findOne(id: string):Promise<IProduct> {
-    const product = await this.productModel.findOne({_id: id});
-    return product;
+    return this.productModel.findOne({_id: id});
   }
 
   // update a product
@@ -67,15 +62,13 @@ export class ProductsService {
       // check if images array is not empty
       if(images.length > 0){
         // get the image names
-        const imageNames = images.map(image => image.filename);
         // append the image names to the updateProductInput
-        updateProductInput.images = imageNames;
+        updateProductInput.images = images.map(image => image.filename);
         // upload the images
         await Promise.all(images.map(image => this.uploadImage(image, updateProductInput.category)));
       }
       // find the product and update it
-      const product = await this.productModel.findOneAndUpdate({_id: id}, updateProductInput, {new: true});
-      return product;
+      return await this.productModel.findOneAndUpdate({_id: id}, updateProductInput, {new: true});
     }catch(error){
       return error;
     }
@@ -90,7 +83,7 @@ export class ProductsService {
       }
       // find and delete the product by id
       const product = await this.productModel.findOneAndRemove({_id: id});
-      return product ? true : false;
+      return !!product;
     }catch(error){
       return error;
     }

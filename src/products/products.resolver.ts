@@ -23,10 +23,13 @@ export class ProductsResolver {
   @Mutation(() => GProduct)
   @UseAbility(Actions.manage, GAdmin)
   @UseAbility(Actions.read, GUser)
-  async createProduct(@Args({ name: 'images', type: () => [GraphQLUpload] }) images: FileUpload[], @Args('createProductInput') createProductInput: CreateProductInput): Promise<IProduct> {
+  async createProduct(
+      @Args({ name: 'images', type: () => [GraphQLUpload] }) images: FileUpload[],
+      @Args('createProductInput') createProductInput: CreateProductInput
+  ): Promise<IProduct> {
     const product = await this.productsService.create(createProductInput, images);
     // publish to the createProduct event
-    pubSub.publish('createdProduct', { createdProduct: product });
+    await pubSub.publish('createdProduct', {createdProduct: product});
     return product;
   }
 
@@ -43,7 +46,9 @@ export class ProductsResolver {
   @Query(() => [GProduct], { name: 'productsByCategory' })
   @UseAbility(Actions.manage, GAdmin)
   @UseAbility(Actions.read, GUser)
-  async findByCategory(@Args('category', { type: () => String }) category: string): Promise<IProduct[]> {
+  async findByCategory(
+      @Args('category', { type: () => String }) category: string
+  ): Promise<IProduct[]> {
     return await this.productsService.findByCategory(category);
   }
 
@@ -51,7 +56,9 @@ export class ProductsResolver {
   @Query(() => [GProduct], { name: 'productsByBrand' })
   @UseAbility(Actions.manage, GAdmin)
   @UseAbility(Actions.read, GUser)
-  async findByBrand(@Args('brand', { type: () => String }) brand: string): Promise<IProduct[]> {
+  async findByBrand(
+      @Args('brand', { type: () => String }) brand: string
+  ): Promise<IProduct[]> {
     return await this.productsService.findByBrand(brand);
   }
 
@@ -59,7 +66,9 @@ export class ProductsResolver {
   @Query(() => GProduct, { name: 'product' })
   @UseAbility(Actions.manage, GAdmin)
   @UseAbility(Actions.read, GUser)
-  async findOne(@Args('id', { type: () => String }) id: string): Promise<IProduct> {
+  async findOne(
+      @Args('id', { type: () => String }) id: string
+  ): Promise<IProduct> {
     return await this.productsService.findOne(id);
   }
 
@@ -67,10 +76,13 @@ export class ProductsResolver {
   @Mutation(() => GProduct)
   @UseAbility(Actions.manage, GAdmin)
   @UseAbility(Actions.read, GUser)
-  async updateProduct(@Args({ name: 'images', type: () => [GraphQLUpload] }) images: FileUpload[], @Args('id') id: string, @Args('updateProductInput') updateProductInput: UpdateProductInput): Promise<IProduct> {
+  async updateProduct(
+      @Args({ name: 'images', type: () => [GraphQLUpload] }) images: FileUpload[],
+      @Args('id') id: string, @Args('updateProductInput') updateProductInput: UpdateProductInput
+  ): Promise<IProduct> {
     const product = await this.productsService.update(id, updateProductInput, images);
     // publish to the updateProduct event
-    pubSub.publish('updateProduct', { updatedProduct: product });
+    await pubSub.publish('updateProduct', {updatedProduct: product});
     return product;
   }
 
@@ -78,10 +90,12 @@ export class ProductsResolver {
   @Mutation(() => GProduct)
   @UseAbility(Actions.manage, GAdmin)
   @UseAbility(Actions.read, GUser)
-  async removeProduct(@Args('id', { type: () => String }) id: string):Promise<boolean> {
+  async removeProduct(
+      @Args('id', { type: () => String }) id: string
+  ):Promise<boolean> {
     const isRemoved = await this.productsService.remove(id);
     // publish to the removeProduct event
-    pubSub.publish('removeProduct', { removedProduct: id });
+    await pubSub.publish('removeProduct', {removedProduct: id});
     return isRemoved;
   }
 }

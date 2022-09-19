@@ -25,7 +25,7 @@ config();
     // casl  module configuration
     CaslModule.forRoot<Roles>({
       // Role to grant full access, optional
-      superuserRole: Roles.admin, // all admins are super users
+      superuserRole: Roles.admin, // all admins are superusers
     }),
  
     // graphql module
@@ -59,7 +59,7 @@ config();
         PORT: Joi.number().default(5000),
       }),
       validationOptions: {
-        // allow unknown keys (change to false to fail on unknown keys)
+        // allow unknown keys (change to false, fail on unknown keys)
         allowUnknown: true,
         abortEarly: true,
       },
