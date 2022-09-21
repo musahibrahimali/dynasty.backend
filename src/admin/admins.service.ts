@@ -1,19 +1,17 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAdminInput } from './dto/create-admin.input';
-import { UpdateAdminInput } from './dto/update-admin.input';
-import { Admin, AdminsModel } from './schema/admin.schema';
-import { Model } from 'mongoose';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
-import {Ctx} from 'src/common/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { generateSalt } from 'src/common/common';
-import { comparePassword, hashPassword } from 'src/common/functions/common.function';
-import { LoginAdminInput } from './dto/login-admin.input';
-import { FileUpload } from 'graphql-upload';
+import {Injectable} from '@nestjs/common';
+import {CreateAdminInput} from './dto/create-admin.input';
+import {UpdateAdminInput} from './dto/update-admin.input';
+import {Admin, AdminsModel} from './schema/admin.schema';
+import {Model} from 'mongoose';
+import {JwtService} from '@nestjs/jwt';
+import {ConfigService} from '@nestjs/config';
+import {comparePassword, Ctx, generateSalt, hashPassword} from '@common';
+import {InjectModel} from '@nestjs/mongoose';
+import {LoginAdminInput} from './dto/login-admin.input';
+import {FileUpload} from 'graphql-upload';
 import * as fs from 'fs';
 import * as path from 'path';
-import { IAdmin } from './interface/admin.interface';
+import {IAdmin} from './interface/admin.interface';
 
 @Injectable()
 export class AdminsService {
@@ -32,9 +30,8 @@ export class AdminsService {
       // add the salt to the dto
       createAdminInput.salt = salt;
       // hash password
-      const hassedPassword = await hashPassword(createAdminInput.password, salt);
-      // add the hassed password to the dto
-      createAdminInput.password = hassedPassword;
+      // add the hashed password to the dto
+      createAdminInput.password = await hashPassword(createAdminInput.password, salt);
       const admin = await this.adminsModel.create(createAdminInput);
       // save user to database
       const _admin = await admin.save();
@@ -85,21 +82,18 @@ export class AdminsService {
 
   // find a admin by id
   async findOne(id: string): Promise<IAdmin> {
-    const admin = await this.adminsModel.findOne({_id: id});
-    return admin;
+    return this.adminsModel.findOne({_id: id});
   }
 
   // validate jwt admin
   async validateUser(payload: any): Promise<IAdmin> {
-    const admin = await this.adminsModel.findOne({ _id: payload.sub });
-    return admin;
+    return this.adminsModel.findOne({_id: payload.sub});
   }
 
   // update user
   async update(id: string, updateAdminInput: UpdateAdminInput): Promise<IAdmin> {
     // find and update user
-    const admin = await this.adminsModel.findByIdAndUpdate(id, updateAdminInput, { new: true });
-    return admin;
+    return this.adminsModel.findByIdAndUpdate(id, updateAdminInput, {new: true});
   }
 
   // update user avatar
@@ -155,6 +149,6 @@ export class AdminsService {
   async remove(id: string): Promise<boolean> {
     // delete user
     const result = await this.adminsModel.findByIdAndRemove(id);
-    return result ? true : false;
+    return !!result;
   }
 }

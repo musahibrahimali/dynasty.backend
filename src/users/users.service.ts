@@ -1,19 +1,17 @@
-import { Injectable } from '@nestjs/common';
-import { generateSalt } from 'src/common/common';
-import { CreateUserInput } from './dto/create-user.input';
-import { UpdateUserInput } from './dto/update-user.input';
-import { hashPassword, comparePassword } from 'src/common/functions/common.function';
-import { Model } from 'mongoose';
-import { User, UsersModel } from './schema/user.schema';
-import { JwtService } from '@nestjs/jwt';
-import { LoginUserInput } from './dto/login-user.input';
-import { InjectModel } from '@nestjs/mongoose';
-import {Ctx} from 'src/common/common';
-import { ConfigService } from '@nestjs/config';
-import { FileUpload } from 'graphql-upload';
+import {Injectable} from '@nestjs/common';
+import {Ctx, generateSalt, comparePassword, hashPassword} from '@common';
+import {CreateUserInput} from './dto/create-user.input';
+import {UpdateUserInput} from './dto/update-user.input';
+import {Model} from 'mongoose';
+import {User, UsersModel} from './schema/user.schema';
+import {JwtService} from '@nestjs/jwt';
+import {LoginUserInput} from './dto/login-user.input';
+import {InjectModel} from '@nestjs/mongoose';
+import {ConfigService} from '@nestjs/config';
+import {FileUpload} from 'graphql-upload';
 import * as fs from 'fs';
 import * as path from 'path';
-import { IUser } from './interface/user.interface';
+import {IUser} from './interface/user.interface';
 
 @Injectable()
 export class UsersService {
@@ -32,9 +30,8 @@ export class UsersService {
       // add the salt to the dto
       createUserInput.salt = salt;
       // hash password
-      const hassedPassword = await hashPassword(createUserInput.password, salt);
-      // add the hassed password to the dto
-      createUserInput.password = hassedPassword;
+      // add the hashed password to the dto
+      createUserInput.password = await hashPassword(createUserInput.password, salt);
       const user = await this.usersModel.create(createUserInput);
       // save user to database
       const _user = await user.save();
@@ -97,21 +94,18 @@ export class UsersService {
 
   // find a user by id
   async findOne(id: string): Promise<IUser> {
-    const user = await this.usersModel.findOne({_id: id});
-    return user;
+    return this.usersModel.findOne({_id: id});
   }
 
   // validate jwt user
   async validateUser(payload: any): Promise<User> {
-    const user = await this.usersModel.findOne({ _id: payload.sub });
-    return user;
+    return this.usersModel.findOne({_id: payload.sub});
   }
 
   // update user
   async update(id: string, updateUserInput: UpdateUserInput): Promise<IUser> {
     // find and update user
-    const user = await this.usersModel.findByIdAndUpdate(id, updateUserInput, { new: true });
-    return user;
+    return this.usersModel.findByIdAndUpdate(id, updateUserInput, {new: true});
   }
 
   // update user avatar
@@ -167,6 +161,6 @@ export class UsersService {
   async remove(id: string): Promise<boolean> {
     // delete user
     const result = await this.usersModel.findByIdAndRemove(id);
-    return result ? true : false;
+    return !!result;
   }
 }

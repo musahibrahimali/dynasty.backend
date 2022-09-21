@@ -2,7 +2,7 @@ export {CurrentUser} from './decorators/current.user.decorator';
 export {DateScalar} from './scalars/date.scalar';
 export {ComplexityPlugin} from './plugins/complexity.plugin';
 export {LoggingPlugin} from './plugins/logging.plugin';
-export {UpperCaseDirective} from './directives/upper-case.directive';
+export {upperCaseDirectiveTransformer} from './directives/upper-case.directive';
 export {jwtConstants} from './constants/constants';
 export {Ctx} from './types/types';
 export {DefaultActions, Roles} from './enums/enums';
@@ -16,3 +16,6 @@ export {
     GoogleAuthGuard,
     FacebookAuthGuard
 } from './guards/guards';
+
+export {default as configuration} from './config/configuration';
+

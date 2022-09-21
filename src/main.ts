@@ -10,7 +10,7 @@ import { graphqlUploadExpress } from 'graphql-upload';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    logger: ['error', 'warn', 'debug', 'verbose', 'log'], // 'log' // remove log to disable logging
+    logger: ['error', 'warn', 'debug', 'verbose'], // 'log' // remove log to disable logging
   });
   // app config service
   const configService = app.get(ConfigService);

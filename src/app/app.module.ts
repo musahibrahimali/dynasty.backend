@@ -4,15 +4,15 @@ import {MongooseModule} from '@nestjs/mongoose';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
-import { UsersModule } from 'src/users/users.module';
-import { AdminsModule } from 'src/admin/admins.module';
+import { UsersModule } from '@users/users.module';
+import { AdminsModule } from '@admin/admins.module';
 import { config } from 'dotenv';
-import { Roles } from 'src/common/common';
-import configuration from 'src/common/config/configuration';
+import {Roles, upperCaseDirectiveTransformer, configuration} from '@common';
 import { CaslModule } from 'nest-casl';
 import * as Joi from 'joi';
-import { ProductsModule } from '../products/products.module';
+import { ProductsModule } from '@products/products.module';
 import {ApolloServerPluginLandingPageLocalDefault} from "apollo-server-core";
+import {ApolloDriver, ApolloDriverConfig} from "@nestjs/apollo";
 
 config();
 
@@ -30,7 +30,8 @@ config();
     }),
  
     // graphql module
-    GraphQLModule.forRoot({
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
       installSubscriptionHandlers: true,
       autoSchemaFile: true,
       sortSchema: true,
@@ -47,6 +48,7 @@ config();
       context: ({ req, res }) => {
         return {req, res};
       },
+      transformSchema: (schema) => upperCaseDirectiveTransformer(schema, 'upper'),
     }),
 
     // configuration module
@@ -69,7 +71,7 @@ config();
       },
     }),
     // connect to mongodb database
-    MongooseModule.forRoot(process.env.DB_URL, {
+    MongooseModule.forRoot(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     }),

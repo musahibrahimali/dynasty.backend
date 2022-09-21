@@ -3,7 +3,7 @@ import { UsersService } from './users.service';
 import { UsersResolver } from './users.resolver';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from 'src/common/common';
+import { jwtConstants } from '@common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './schema/user.schema';
 import { JwtStrategy } from './strategies/strategies';

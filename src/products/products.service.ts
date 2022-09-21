@@ -17,38 +17,66 @@ export class ProductsService {
     private configService: ConfigService,
   ) {}
   async create(createProductInput: CreateProductInput, images: FileUpload[]): Promise<IProduct> {
-    // get all the names of the images
-    // update the createProductInput with the image names
-    createProductInput.images = images.map(image => image.filename);
-    // upload the images
-    const uploadImages = await Promise.all(images.map(image => this.uploadImage(image, createProductInput.category)));
-    if(uploadImages){
-      // create a new product item
-      const product = await this.productModel.create(createProductInput);  
-      // save and return the saved product
-      return await product.save();
+    try{
+      // if images is not empty or null
+        if(images.length > 0){
+          // upload the images
+          const uploadImages = await Promise.all(images.map((image) => {
+            return this.uploadImage(image, createProductInput.category);
+          }));
+          if(uploadImages){
+            // replace the images array with the image names
+            createProductInput.images = uploadImages;
+            // create a new product item
+            const product = await this.productModel.create(createProductInput);
+            // save and return the saved product
+            return await product.save();
+          }
+        }else{
+          // just create the product without images
+            const product = await this.productModel.create(createProductInput);
+            // save and return the saved product
+            return await product.save();
+        }
+    }catch (error){
+        return error;
     }
-    return null;
   }
 
   // find all products
   async findAll():Promise<IProduct[]> {
-    return this.productModel.find();
+    try{
+      return this.productModel.find();
+    }catch (e) {
+        return e;
+    }
   }
 
   // find products by category
   async findByCategory(category: string):Promise<IProduct[]> {
-    return this.productModel.find({category: category});
+    try {
+      return this.productModel.find({category: category});
+    }catch (e) {
+        return e;
+    }
   }
 
   // find products by brand
   async findByBrand(brand: string):Promise<IProduct[]> {
-    return this.productModel.find({brand: brand});
+    try {
+      return this.productModel.find({brand: brand});
+    }catch (e) {
+        return e;
+    }
   }
 
   // find one product
   async findOne(id: string):Promise<IProduct> {
-    return this.productModel.findOne({_id: id});
+    try {
+      return this.productModel.findOne({_id: id});
+    }catch (e) {
+        return e;
+    }
   }
 
   // update a product
@@ -90,14 +118,18 @@ export class ProductsService {
   }
 
   // upload images
-  private async uploadImage(image: FileUpload, category: string): Promise<boolean> {
+  private async uploadImage(image: FileUpload, category: string): Promise<string> {
     try{
-      const { filename, createReadStream } = image;
+      // resolve the image from promise
+        const {createReadStream, filename} = await image;
+        // split and get the file extension
+        const _fileExtension = filename.split('.').pop();
       const stream = createReadStream();
       const chunks = [];
       await new Promise<Buffer>((resolve, reject) => {
           let buffer: Buffer;
           stream.on('data', function (chunk) {
+            // console.log("data chunk ::::::>>>>> ", chunk);
             chunks.push(chunk);
           });
           stream.on('end', function () {
@@ -107,26 +139,60 @@ export class ProductsService {
           stream.on('error', reject);
         });
         const buffer = Buffer.concat(chunks);
-        const uploadsDir = await this.configService.get('UPLOADS_DIR');
+        const uploadsDir = await this.configService.get<string>('UPLOADS_DIR');
+        // console.log("the uploads dir is ::::>>>>>>", uploadsDir);
         const folderPath = path.join(__dirname, `${uploadsDir}/images/products/${category}`);
         if(!fs.existsSync(folderPath)){
           fs.mkdirSync(folderPath, {recursive: true});
         }
+        const _fileNameWithoutSpaces = await this.constructFileName(filename);
+        const __fileName = `${_fileNameWithoutSpaces}.${_fileExtension}`;
         // write the file to the folder
-        fs.writeFile(`${folderPath}/${filename}`, buffer, (error:any) => {
+        fs.writeFile(`${folderPath}/${__fileName}`, buffer, (error:any) => {
           if(error){
+            console.log(error);
             return error;
           }
         });
-      return true;
+      return __fileName;
     }catch(error){
       return error;
     }
   }
 
   // read all images
-  async readImages():Promise<string[] | any> {
+  private async readImages():Promise<string[] | any> {
     console.log("done");
+    try{
+      // get the uploads directory
+        const uploadsDir = await this.configService.get<string>('UPLOADS_DIR');
+        // get the images directory
+        const imagesDir = path.join(__dirname, `${uploadsDir}/images/products`);
+      // return the images
+        return fs.readdirSync(imagesDir);
+    }catch (e) {
+        return e;
+    }
+  }
+
+  private async constructFileName(filename: string): Promise<string> {
+    try{
+      // get the current year, month and day and time with hours and minutes
+      const date = new Date();
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      const day = date.getDate();
+      const hours = date.getHours();
+      const minutes = date.getMinutes();
+      const _fileName = filename.split('.').slice(0, -1).join('.');
+      // replace all " " in _fileName
+      const _fileNameWithoutSpaces = _fileName.replace(/ /g, '-');
+      // console.log(`file name without spaces is ::::>>>>>> ${_fileNameWithoutSpaces}`);
+      // construct the file name
+      return `${year}-${month}-${day}-${hours}-${minutes}-${_fileNameWithoutSpaces}`;
+    }catch(error){
+      return error;
+    }
   }
 
 }

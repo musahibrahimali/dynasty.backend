@@ -6,11 +6,11 @@ import { PubSub } from 'graphql-subscriptions';
 import { GProduct } from './models/product.model';
 import { IProduct } from './interface/product.interface';
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
-import { GqlAuthGuard } from 'src/common/common';
+import { GqlAuthGuard } from '@common';
 import { AccessGuard, Actions, UseAbility } from 'nest-casl';
 import { UseGuards } from '@nestjs/common';
-import { GAdmin } from 'src/admin/models/admin.model';
-import { GUser } from '../users/models/user.model';
+import { GAdmin } from '@admin/models/admin.model';
+import { GUser } from '@users/models/user.model';
 
 // subscription handler
 const pubSub = new PubSub();

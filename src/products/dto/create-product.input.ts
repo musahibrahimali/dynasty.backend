@@ -1,38 +1,38 @@
-import { InputType, Field } from '@nestjs/graphql';
+import {InputType, Field} from '@nestjs/graphql';
 
 @InputType()
 export class CreateProductInput {
 
-  @Field()
+    @Field()
     name: string;
 
-  @Field()
+    @Field()
     description: string;
 
-  @Field()
+    @Field()
     price: number;
 
-  @Field(() => String)
+    @Field(() => [String])
     images: string[];
 
-  @Field()
+    @Field()
     category: string;
 
-  @Field()
+    @Field()
     brand: string;
 
-  @Field()
+    @Field()
     rating: number;
 
-  @Field()
+    @Field()
     numReviews: number;
 
-  @Field()
+    @Field()
     numInStock: number;
 
-  @Field(() => String)
+    @Field(() => [String])
     colours: string[];
 
-  @Field(() => Number)
+    @Field(() => [String])
     sizes: string[];
 }

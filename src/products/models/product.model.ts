@@ -6,40 +6,40 @@ export class GProduct {
     _id: string;
 
     @Field()
-        name: string;
+    name: string;
 
     @Field()
-        description: string;
+    description: string;
 
     @Field()
-        price: number;
+    price: number;
 
-    @Field(() => String)
-        images: string[];
-
-    @Field()
-        category: string;
+    @Field(() => [String])
+    images: string[];
 
     @Field()
-        brand: string;
+    category: string;
 
     @Field()
-        rating: number;
+    brand: string;
 
     @Field()
-        numReviews: number;
+    rating: number;
 
     @Field()
-        numInStock: number;
+    numReviews: number;
 
-    @Field(() => String)
-        colours: string[];
+    @Field()
+    numInStock: number;
 
-    @Field(() => Number)
-        sizes: string[];
+    @Field(() => [String])
+    colours: string[];
+
+    @Field(() => [String])
+    sizes: string[];
 
     @Field({nullable: true})
-        createdAt?: Date;
+    createdAt?: Date;
 
     @Field({nullable: true})
     updatedAt?: Date;

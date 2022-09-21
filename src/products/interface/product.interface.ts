@@ -1,46 +1,46 @@
-import { Field, ID, InterfaceType } from '@nestjs/graphql';
+import {Field, ID, InterfaceType} from '@nestjs/graphql';
 
 @InterfaceType()
 export abstract class IProduct {
-  @Field(() => ID)
+    @Field(() => ID)
     _id: string;
 
-  @Field()
+    @Field()
     name: string;
 
-  @Field()
+    @Field()
     description: string;
 
-  @Field()
+    @Field()
     price: number;
 
-  @Field()
+    @Field()
     images: string[];
 
-  @Field()
+    @Field()
     category: string;
 
-  @Field()
+    @Field()
     brand: string;
 
-  @Field()
+    @Field()
     rating: number;
 
-  @Field()
+    @Field()
     numReviews: number;
 
-  @Field()
+    @Field()
     numInStock: number;
 
-  @Field()
+    @Field()
     colours: string[];
 
-  @Field()
+    @Field()
     sizes: string[];
 
-  @Field({nullable: true})
+    @Field({nullable: true})
     createdAt?: Date;
 
-  @Field({nullable: true})
-  updatedAt?: Date;
+    @Field({nullable: true})
+    updatedAt?: Date;
 }

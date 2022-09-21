@@ -1,38 +1,38 @@
-import { CreateProductInput } from './create-product.input';
-import { InputType, Field, PartialType } from '@nestjs/graphql';
+import {CreateProductInput} from './create-product.input';
+import {InputType, Field, PartialType} from '@nestjs/graphql';
 
 @InputType()
 export class UpdateProductInput extends PartialType(CreateProductInput) {
-  @Field({nullable: true})
+    @Field({nullable: true})
     name?: string;
 
-  @Field({nullable: true})
+    @Field({nullable: true})
     description?: string;
 
-  @Field({nullable: true})
+    @Field({nullable: true})
     price?: number;
 
-  @Field(() => String, {nullable: true})
+    @Field(() => [String], {nullable: true})
     images?: string[];
 
-  @Field({nullable: true})
+    @Field({nullable: true})
     category?: string;
 
-  @Field({nullable: true})
+    @Field({nullable: true})
     brand?: string;
 
-  @Field({nullable: true})
+    @Field({nullable: true})
     rating?: number;
 
-  @Field({nullable: true})
+    @Field({nullable: true})
     numReviews?: number;
 
-  @Field({nullable: true})
+    @Field({nullable: true})
     numInStock?: number;
 
-  @Field(() => String, {nullable: true})
+    @Field(() => [String], {nullable: true})
     colours?: string[];
 
-  @Field(() => Number, {nullable: true})
+    @Field(() => [String], {nullable: true})
     sizes?: string[];
 }

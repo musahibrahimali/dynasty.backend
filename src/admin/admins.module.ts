@@ -3,7 +3,7 @@ import { AdminsService } from './admins.service';
 import { AdminsResolver } from './admins.resolver';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from 'src/common/common';
+import { jwtConstants } from '@common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Admin, AdminSchema } from './schema/admin.schema';
 import { CaslModule } from 'nest-casl';

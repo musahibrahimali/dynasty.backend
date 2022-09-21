@@ -1,7 +1,7 @@
 import { Actions, Permissions } from 'nest-casl';
 import { InferSubjects } from '@casl/ability';
 import { GUser } from 'src/users/models/user.model';
-import { Roles } from 'src/common/common';
+import { Roles } from '@common';
 import { GAdmin } from 'src/admin/models/admin.model';
 
 export type Subjects = InferSubjects<typeof GUser | typeof GAdmin>;
