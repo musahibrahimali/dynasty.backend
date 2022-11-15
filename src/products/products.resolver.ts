@@ -1,7 +1,7 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { ProductsService } from './products.service';
-import { CreateProductInput } from './dto/create-product.input';
-import { UpdateProductInput } from './dto/update-product.input';
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 import { PubSub } from 'graphql-subscriptions';
 import { GProduct } from './models/product.model';
 import { IProduct } from './interface/product.interface';
@@ -25,7 +25,7 @@ export class ProductsResolver {
   @UseAbility(Actions.read, GUser)
   async createProduct(
       @Args({ name: 'images', type: () => [GraphQLUpload] }) images: FileUpload[],
-      @Args('createProductInput') createProductInput: CreateProductInput
+      @Args('createProductInput') createProductInput: CreateProductDto
   ): Promise<IProduct> {
     const product = await this.productsService.create(createProductInput, images);
     // publish to the createProduct event
@@ -35,9 +35,9 @@ export class ProductsResolver {
 
   // find all products 
   @Query(() => [GProduct], { name: 'products' })
-  @UseGuards(GqlAuthGuard, AccessGuard)
-  @UseAbility(Actions.manage, GAdmin)
-  @UseAbility(Actions.read, GUser)
+  // @UseGuards(GqlAuthGuard, AccessGuard)
+  // @UseAbility(Actions.manage, GAdmin)
+  // @UseAbility(Actions.read, GUser)
   async findAll(): Promise<IProduct[]> {
     return await this.productsService.findAll();
   }
@@ -78,7 +78,7 @@ export class ProductsResolver {
   @UseAbility(Actions.read, GUser)
   async updateProduct(
       @Args({ name: 'images', type: () => [GraphQLUpload] }) images: FileUpload[],
-      @Args('id') id: string, @Args('updateProductInput') updateProductInput: UpdateProductInput
+      @Args('id') id: string, @Args('updateProductInput') updateProductInput: UpdateProductDto
   ): Promise<IProduct> {
     const product = await this.productsService.update(id, updateProductInput, images);
     // publish to the updateProduct event

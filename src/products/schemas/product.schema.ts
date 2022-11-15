@@ -1,54 +1,54 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { IsArray, IsNumber, IsString } from "class-validator";
-import { Document } from "mongoose";
+import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose";
+import {IsArray, IsNumber, IsString} from "class-validator";
+import {Document} from "mongoose";
 
 export type ProductsModel = Product & Document;
 
-@Schema({ timestamps: true })
+@Schema({timestamps: true})
 export class Product {
     @IsString()
     @Prop({required: true})
-        name: string;
+    name: string;
 
     @IsString()
     @Prop({required: true})
-        description: string;
+    description: string;
 
     @IsNumber()
-    @Prop({required: true})
-        price: number;
+    @Prop( {required: true, type: {amount: Number, baseAmount: Number, currencyCode: String}})
+    price: { amount: number, baseAmount: number, currencyCode: string };
 
     @IsArray()
     @Prop({required: true})
-        images: string[];
+    images: string[];
 
     @IsString()
     @Prop({required: true})
-        category: string;
+    category: string;
 
     @IsString()
     @Prop({required: true})
-        brand: string;
+    brand: string;
 
     @IsNumber()
     @Prop({required: false})
-        rating: number;
+    rating: number;
 
     @IsNumber()
     @Prop({required: false})
-        numReviews: number;
+    numReviews: number;
 
     @IsNumber()
     @Prop({required: true})
-        numInStock: number;
+    numInStock: number;
 
     @IsArray()
     @Prop({required: true})
-        colours: string[];
+    colours: string[];
 
     @IsArray()
     @Prop({required: true})
-        sizes: string[];
+    sizes: string[];
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

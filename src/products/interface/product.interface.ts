@@ -1,4 +1,5 @@
 import {Field, ID, InterfaceType} from '@nestjs/graphql';
+import { GraphQLJSONObject } from 'graphql-type-json'
 
 @InterfaceType()
 export abstract class IProduct {
@@ -11,8 +12,8 @@ export abstract class IProduct {
     @Field()
     description: string;
 
-    @Field()
-    price: number;
+    @Field(() => GraphQLJSONObject)
+    price: any;
 
     @Field()
     images: string[];

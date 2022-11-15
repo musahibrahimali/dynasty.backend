@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app/app.module';
+import { AppModule } from '@app/app.module';
 import {ConfigService} from '@nestjs/config';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ValidationPipe } from '@nestjs/common';
@@ -14,7 +14,7 @@ async function bootstrap() {
   });
   // app config service
   const configService = app.get(ConfigService);
-  const origin = configService.get<string>('ORIGIN_URL');
+  const origin = configService.get<string>('FRONTEND_URL');
   // enable CORS
   app.enableCors({
     origin: origin,
@@ -39,7 +39,7 @@ async function bootstrap() {
   .build();
 
   // graphql file upload
-  app.use(graphqlUploadExpress({ 
+  app.use(graphqlUploadExpress({
     maxFileSize: 1000000000, // 1GB
     maxFiles: 10  // the maximum number of files per upload
   }));

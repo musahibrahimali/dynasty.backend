@@ -13,6 +13,8 @@ import * as Joi from 'joi';
 import { ProductsModule } from '@products/products.module';
 import {ApolloServerPluginLandingPageLocalDefault} from "apollo-server-core";
 import {ApolloDriver, ApolloDriverConfig} from "@nestjs/apollo";
+import { join } from 'path/posix';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 config();
 
@@ -27,6 +29,10 @@ config();
     CaslModule.forRoot<Roles>({
       // Role to grant full access, optional
       superuserRole: Roles.admin, // all admins are superusers
+    }),
+
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
     }),
  
     // graphql module

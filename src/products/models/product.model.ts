@@ -1,4 +1,6 @@
-import { ObjectType, Field, ID } from '@nestjs/graphql';
+import {ObjectType, Field, ID} from '@nestjs/graphql';
+import {GraphQLJSONObject} from "graphql-type-json";
+
 
 @ObjectType()
 export class GProduct {
@@ -11,8 +13,8 @@ export class GProduct {
     @Field()
     description: string;
 
-    @Field()
-    price: number;
+    @Field(() => GraphQLJSONObject)
+    price: any;
 
     @Field(() => [String])
     images: string[];
